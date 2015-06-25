@@ -1,10 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	// "fmt"
+	// "os"
+	"net/http"
 )
 
+func endpoint(w ) {
+
+}
+
 func main() {
-	fmt.Fprintf(os.Stdout, "Hello World\n")
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		panic("Could not use port")
+	}
 }
