@@ -1,18 +1,24 @@
 package main
 
 import (
-	// "fmt"
-	// "os"
+	"fmt"
+	"log"
 	"net/http"
+
+    "github.com/gorilla/mux"
 )
 
-func endpoint(w ) {
-
+func Index(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Hello World")
 }
 
 func main() {
-	err := http.ListenAndServe(":8080", nil)
+
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/", Index)
+
+	err := http.ListenAndServe(":8080", router)
 	if err != nil {
-		panic("Could not use port")
+		log.Fatal("ListenAndServe Error: ", err)
 	}
 }
