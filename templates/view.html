@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Upload | Imagio</title>
-	<style>
-	.container { width: 800px; max-width: 100%; margin: 0 auto; }
-	.content-img { max-width: 100%; }
-	</style>
-</head>
-<body>
+{{define "view"}}
+	{{template "header"}}
 
-	<div class="container">
-		<img src="{{.Filename}}" alt="" class="content-img" />
-	</div>
+	<img src="{{.Filename}}" alt="" class="content-img" />
 
-</body>
-</html>
+	{{template "footer"}}
+{{end}}
