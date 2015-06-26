@@ -7,6 +7,8 @@ import (
     "time"
     "strconv"
     "log"
+
+    "github.com/gorilla/mux"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -14,11 +16,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	getView(w, "index", p)
 }
 
-func Upload(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		return
-	}
-
+func ImageUpload(w http.ResponseWriter, r *http.Request) {
 	uniqueId := strconv.FormatInt(time.Now().Unix(), 10)
 	file := File{Filename:"", uid:uniqueId}
 
@@ -48,14 +46,20 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	// Add More here to Save to DB
 	// and have the file on S3.
 
-	http.Redirect(w, r, "/view?id="+file.uid, 302)
+	http.Redirect(w, r, "/i/"+file.uid, 302)
 }
 
-func View(w http.ResponseWriter, r *http.Request) {
-	path := "uploads/"+r.FormValue("id")
+func ImageView(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	path := "uploads/"+vars["uid"]
 	if _, err := os.Stat(path); err == nil {
-		// i := Image{Filename: "/i?id="+r.FormValue("id")}
-		f := File{Filename: "/i?id="+r.FormValue("id")}
+		f := File{Filename: "/image/"+vars["uid"]}
 		getView(w, "view", f)
 	}
+}
+
+func Image(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	w.Header().Set("Content-Type", "image")
+	http.ServeFile(w, r, "uploads/"+vars["uid"])
 }
