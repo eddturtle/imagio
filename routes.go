@@ -34,4 +34,16 @@ var routes = Routes{
 		"/",
 		Index,
 	},
+	Route{
+		"upload",
+		"POST",
+		"/upload",
+		Upload,
+	},
+	Route{
+		"view",
+		"GET",
+		"/i/{uid}",
+		View,
+	},
 }
