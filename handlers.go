@@ -7,8 +7,11 @@ import (
     "time"
     "strconv"
     "log"
+    "bufio"
 
     "github.com/gorilla/mux"
+	"github.com/mitchellh/goamz/aws"
+	"github.com/mitchellh/goamz/s3"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -37,14 +40,41 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 	defer tf.Close()
 
 	// Copy Image -> Temp File
-	_, err = io.Copy(tf, f)
-	if err != nil {
-		log.Fatal("No copy", err)
-		return
-	}
+	// _, err = io.Copy(tf, f)
+	// if err != nil {
+	// 	log.Fatal("No copy", err)
+	// 	return
+	// }
 
 	// Add More here to Save to DB
 	// and have the file on S3.
+	AWSAuth := aws.Auth{
+		AccessKey: "AKIAJYDKHSYMZNYV2A2Q",
+		SecretKey: "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",
+	}
+	region := aws.EUWest
+
+	connection := s3.New(AWSAuth, region)
+	bucket := connection.Bucket("imagio")
+
+	fileInfo, _ := tf.Stat()
+	var size int64 = fileInfo.Size()
+	bytes := make([]byte, size)
+
+	buffer := bufio.NewReader(tf)
+	_, err = buffer.Read(bytes)
+
+	filetype := http.DetectContentType(bytes)
+	err = bucket.Put(
+		file.uid, 
+		bytes, 
+		filetype, 
+		s3.ACL("public-read"),
+	)
+
+	if err != nil {
+		log.Fatal("Cannot add to S3 ", err)
+	}
 
 	http.Redirect(w, r, "/i/"+file.uid, 302)
 }

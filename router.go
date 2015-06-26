@@ -6,6 +6,10 @@ import (
     "github.com/gorilla/mux"
 )
 
+const (
+	StaticDIR = "/static/"
+)
+
 func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -21,7 +25,9 @@ func NewRouter() *mux.Router {
 			Handler(handler)
 	}
 
-    router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+    router.
+    	PathPrefix(StaticDIR).
+    	Handler(http.StripPrefix(StaticDIR, http.FileServer(http.Dir("."+StaticDIR))))
 
 	return router
 }
