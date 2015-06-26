@@ -1,0 +1,46 @@
+
+body { 
+	background-color: #10ADED;
+	font-family: 'sans-serif';
+	color: white;
+}
+
+a {
+	color: white;
+}
+
+.container { 
+	width: 850px; 
+	max-width: 100%; 
+	margin: 0 auto; 
+}
+
+.logo {
+	font-size: 130px;
+	text-align: center;
+	text-transform: uppercase;
+	margin: -70px 0 0 0;
+	padding: 0;
+	border-bottom: 8px solid white;
+}
+.logo a {
+	text-decoration: none;
+}
+
+.content-img { max-width: 100%; }
+
+.upload-area {
+	text-align: center;
+	border: 4px dashed white;
+	padding: 50px 0;
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+footer {
+	margin-top: 20px;
+	text-align: center;
+	font-size: 10px;
+	text-transform: uppercase;
+	font-weight: bold;
+}
