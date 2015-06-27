@@ -3,11 +3,9 @@ package main
 import (
 	"net/http"
     "os"
-    "io"
     "time"
     "strconv"
     "log"
-    "bufio"
 
     "github.com/gorilla/mux"
 )
@@ -36,40 +34,8 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer tf.Close()
-
-	// Copy Image -> Temp File
-	// _, err = io.Copy(tf, f)
-	// if err != nil {
-	// 	log.Fatal("No copy", err)
-	// 	return
-	// }
-
-	// Add More here to Save to DB
-	// and have the file on S3.
-	AWSAuth := aws.Auth{
-		AccessKey: "",
-		SecretKey: "",
-	}
-	region := aws.EUWest
-
-	connection := s3.New(AWSAuth, region)
-	bucket := connection.Bucket("imagio")
-
-	fileInfo, _ := tf.Stat()
-	var size int64 = fileInfo.Size()
-	bytes := make([]byte, size)
-
-	buffer := bufio.NewReader(tf)
-	_, err = buffer.Read(bytes)
-
-	filetype := http.DetectContentType(bytes)
-	err = bucket.Put(
-		file.uid, 
-		bytes, 
-		filetype, 
-		s3.ACL("public-read"),
-	)
-
+	
+	err = UploadToS3(tf, file.uid)
 	if err != nil {
 		log.Fatal("Cannot add to S3 ", err)
 	}
