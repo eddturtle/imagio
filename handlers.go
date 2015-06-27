@@ -10,8 +10,6 @@ import (
     "bufio"
 
     "github.com/gorilla/mux"
-	"github.com/mitchellh/goamz/aws"
-	"github.com/mitchellh/goamz/s3"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -49,8 +47,8 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 	// Add More here to Save to DB
 	// and have the file on S3.
 	AWSAuth := aws.Auth{
-		AccessKey: "AKIAJYDKHSYMZNYV2A2Q",
-		SecretKey: "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",
+		AccessKey: "",
+		SecretKey: "",
 	}
 	region := aws.EUWest
 
