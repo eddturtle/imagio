@@ -2,14 +2,16 @@ package main
 
 import (
     "os"
-    "io"
     "log"
-    // "fmt"
     "time"
     "strconv"
 	"net/http"
 
     "github.com/gorilla/mux"
+)
+
+const (
+	S3URL = "https://s3-eu-west-1.amazonaws.com/"
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -22,55 +24,31 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 
 	// Get the image from POST data
 	f, header, err := r.FormFile("image")
-
-	file := File{Filename:"", uid:uniqueId+"-"+header.Filename}
-
 	if err != nil {
 		log.Fatal("Image Missing ", err)
 		return
 	}
 	defer f.Close()
 
-	// Create a temp file
-	tf, err := os.Create("uploads/"+file.uid)
-	if err != nil {
-		log.Fatal("No access", err)
-		return
+	// Calculate a Filename 
+	// (currenlty: based on original name and unix time)
+	file := File{
+		Filename:uniqueId+"-"+header.Filename, 
+		uid:uniqueId,
 	}
-	defer tf.Close()
-	
- 	// Copy Image -> Temp File
- 	_, err = io.Copy(tf, f)
- 	if err != nil {
- 		log.Fatal("No copy", err)
- 		return
- 	}
 
- 	real, err := os.Open("uploads/"+file.uid)
-
-	err = UploadToS3(real, file.uid)
+	err = UploadToS3(f, file.Filename)
 	if err != nil {
 		log.Fatal("Cannot add to S3 ", err)
 	}
 
-	http.Redirect(w, r, "/i/"+file.uid, 302)
+	http.Redirect(w, r, "/i/"+file.Filename, 302)
 }
 
 func ImageView(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	f := File{Filename: "https://s3-eu-west-1.amazonaws.com/imagio/"+vars["uid"]}
+	f := File{
+		Filename: S3URL + os.Getenv("S3_BUCKET") + "/" + vars["uid"],
+	}
 	getView(w, "view", f)
 }
-
-// func Image(w http.ResponseWriter, r *http.Request) {
-// 	vars := mux.Vars(r)
-// 	w.Header().Set("Content-Type", "image")
-
-// 	data, err := GetFromS3(vars["uid"])
-// 	if err != nil {
-// 		log.Fatal("Cannot get from S3 ", err)
-// 	}
-
-// 	fmt.Fprintf(w, string(data))
-	// http.ServeFile(w, r, "uploads/"+vars["uid"])
-// }	

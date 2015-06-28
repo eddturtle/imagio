@@ -2,9 +2,11 @@ package main
 
 import (
 	"os"
+	"io"
 	"log"
-	"bufio"
+	"bytes"
 	"net/http"
+	"mime/multipart"
 
 	"github.com/mitchellh/goamz/aws"
 	"github.com/mitchellh/goamz/s3"
@@ -12,7 +14,7 @@ import (
 
 var region = aws.EUWest
 
-func UploadToS3(file *os.File, s3Key string) (err error) {
+func UploadToS3(file multipart.File, s3Key string) (err error) {
 
 	auth, err := aws.EnvAuth()
 	if err != nil {
@@ -22,36 +24,18 @@ func UploadToS3(file *os.File, s3Key string) (err error) {
 	connection := s3.New(auth, region)
 	bucket := connection.Bucket(os.Getenv("S3_BUCKET"))
 
-	fileInfo, _ := file.Stat()
-	var size int64 = fileInfo.Size()
-	bytes := make([]byte, size)
-
-	buffer := bufio.NewReader(file)
-	_, err = buffer.Read(bytes)
+	buffer := new(bytes.Buffer)
+	_, err = io.Copy(buffer, file)
 	if err != nil {
-		log.Fatal("Cannot read from Bytes ", err)
-		return
+		log.Fatal("Cannot create file ", err)
 	}
 
-	filetype := http.DetectContentType(bytes)
+	filetype := http.DetectContentType(buffer.Bytes())
 	err = bucket.Put(
 		s3Key, 
-		bytes, 
+		buffer.Bytes(), 
 		filetype, 
 		s3.ACL("public-read"),
 	)
 	return err
 }
-
-// func GetFromS3(name string) (data []byte, err error) {
-
-// 	auth, err := aws.EnvAuth()
-// 	if err != nil {
-// 		log.Fatal("Incorrect AWS Auth Details ", err)
-// 	}
-
-// 	connection := s3.New(auth, region)
-// 	bucket := connection.Bucket(os.Getenv("S3_BUCKET"))
-// 	data, err = bucket.Get(name)
-// 	return data, err
-// }
