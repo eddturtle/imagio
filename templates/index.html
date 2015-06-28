@@ -1,10 +1,20 @@
 {{define "index"}}
 	{{template "header"}}
 
-		<form action="/i" method="POST" enctype="multipart/form-data" class="upload-area">
-			<input type="file" name="image" />
-			<br />
-			<input type="submit" value="Upload" />
+		<form action="/i" method="POST" enctype="multipart/form-data" class="upload-area dropzone" id="my-dropzone">
+
+			<div class="fallback">
+				<input type="file" name="file" />
+				<br />
+				<input type="submit" value="Upload" />
+			</div>
+
+			<div class="dz-default dz-message">
+				<span>Drop images here to upload</span>
+				<br />
+				<small>(or click to choose)</small>
+			</div> 
+
 		</form>
 
 	{{template "footer"}}

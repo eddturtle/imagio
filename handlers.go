@@ -3,9 +3,11 @@ package main
 import (
     "os"
     "log"
+    "fmt"
     "time"
     "strconv"
 	"net/http"
+	"encoding/json"
 
     "github.com/gorilla/mux"
 )
@@ -25,7 +27,7 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 	// Get the image from POST data
 	f, header, err := r.FormFile("image")
 	if err != nil {
-		log.Fatal("Image Missing ", err)
+		// log.Fatal("Image Missing ", err)
 		return
 	}
 	defer f.Close()
@@ -42,7 +44,11 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Cannot add to S3 ", err)
 	}
 
-	http.Redirect(w, r, "/i/"+file.Filename, 302)
+	json, err := json.Marshal(file)
+	if err != nil {
+		return
+	}
+	fmt.Fprintf(w, "%s", json)
 }
 
 func ImageView(w http.ResponseWriter, r *http.Request) {

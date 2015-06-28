@@ -8,6 +8,18 @@
 	<!-- Close .container -->
 	</div>
 
+	<script src="/static/js/dropzone.js"></script>
+	<script>
+		Dropzone.options.myDropzone = {
+			paramName: "image",
+			acceptedFiles: "image/*",
+			success: function(file, success) {
+				var obj = JSON.parse(success);
+				window.location = "/i/"+obj.Filename;
+			}
+		};
+	</script>
+
 </body>
 </html>
 

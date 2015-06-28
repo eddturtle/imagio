@@ -1,15 +1,14 @@
 
+html {
+	min-height: 100%;
+}
+
 body { 
 	background-color: #10ADED;
 	font-family: 'Lato', sans-serif;
 	font-weight: 400;
 	color: white;
-	
-  background-image:
-    linear-gradient(
-      to right, 
-      #10ADED, #008DC6
-    );
+	background-image: linear-gradient(to bottom right, #10ADED, #005B80);
 }
 
 a {
@@ -44,14 +43,25 @@ a {
 
 .upload-area {
 	text-align: center;
-	border: 4px dotted rgba(255, 255, 255, .5);
+	border: 6px dotted rgba(255, 255, 255, .5);
 	padding: 50px 0;
 	margin-top: 50px;
 	margin-bottom: 50px;
+	cursor: pointer;
 }
 .upload-area:hover {
-	border-color: rgba(255, 255, 255, .7);
+	border-color: rgba(255, 255, 255, .9);
 }
+.upload-area .dz-message {
+	padding: 45px 0;
+	font-size: 30px;
+}
+.upload-area .dz-image,
+.upload-area .dz-success-mark,
+.upload-area .dz-error-mark {
+	display: none;
+}
+
 
 footer {
 	margin-top: 20px;
@@ -59,4 +69,5 @@ footer {
 	font-size: 10px;
 	text-transform: uppercase;
 	font-weight: bold;
+	padding: 60px 0 140px 0;
 }

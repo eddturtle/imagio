@@ -25,6 +25,7 @@ func NewRouter() *mux.Router {
 			Handler(handler)
 	}
 
+	// Server CSS, JS & Images Statically.
     router.
     	PathPrefix(StaticDIR).
     	Handler(http.StripPrefix(StaticDIR, http.FileServer(http.Dir("."+StaticDIR))))
