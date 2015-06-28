@@ -17,26 +17,25 @@ const (
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	p := Page{Title:"Home", Body:"Hello"}
-	getView(w, "index", p)
+	getView(w, "index", nil)
 }
 
 func ImageUpload(w http.ResponseWriter, r *http.Request) {
-	uniqueId := strconv.FormatInt(time.Now().Unix(), 10)
 
 	// Get the image from POST data
 	f, header, err := r.FormFile("image")
 	if err != nil {
-		// log.Fatal("Image Missing ", err)
+		log.Printf("No Image, %s", err)
 		return
 	}
 	defer f.Close()
 
 	// Calculate a Filename 
-	// (currenlty: based on original name and unix time)
+	// (currently: based on original name and unix time)
+	uniqueId := strconv.FormatInt(time.Now().Unix(), 10)
 	file := File{
-		Filename:uniqueId+"-"+header.Filename, 
-		uid:uniqueId,
+		Filename: uniqueId+"-"+header.Filename, 
+		uid: uniqueId,
 	}
 
 	err = UploadToS3(f, file.Filename)
@@ -46,7 +45,7 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 
 	json, err := json.Marshal(file)
 	if err != nil {
-		return
+		log.Fatal("Cannot encode to JSON ", err)
 	}
 	fmt.Fprintf(w, "%s", json)
 }
