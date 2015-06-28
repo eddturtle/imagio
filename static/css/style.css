@@ -1,8 +1,15 @@
 
 body { 
 	background-color: #10ADED;
-	font-family: 'sans-serif';
+	font-family: 'Lato', sans-serif;
+	font-weight: 400;
 	color: white;
+	
+  background-image:
+    linear-gradient(
+      to right, 
+      #10ADED, #008DC6
+    );
 }
 
 a {
@@ -10,21 +17,27 @@ a {
 }
 
 .container { 
-	width: 850px; 
+	width: 950px; 
 	max-width: 100%; 
 	margin: 0 auto; 
 }
 
 .logo {
-	font-size: 130px;
+	font-size: 180px;
 	text-align: center;
 	text-transform: uppercase;
-	margin: -35px 0 0 0;
+	margin: -8px 0 0 0;
 	padding: 0;
 	border-bottom: 8px solid white;
+	line-height: .7;
 }
 .logo a {
 	text-decoration: none;
+}
+.logo span {
+	font-size: 160px;
+	position: relative;
+	top: -10px;
 }
 
 .content-img { max-width: 100%; }
@@ -35,6 +48,9 @@ a {
 	padding: 50px 0;
 	margin-top: 50px;
 	margin-bottom: 50px;
+}
+.upload-area:hover {
+	border-color: rgba(255, 255, 255, .7);
 }
 
 footer {
