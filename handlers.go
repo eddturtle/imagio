@@ -1,11 +1,13 @@
 package main
 
 import (
-	"net/http"
     "os"
+    "io"
+    "log"
+    // "fmt"
     "time"
     "strconv"
-    "log"
+	"net/http"
 
     "github.com/gorilla/mux"
 )
@@ -17,10 +19,12 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 func ImageUpload(w http.ResponseWriter, r *http.Request) {
 	uniqueId := strconv.FormatInt(time.Now().Unix(), 10)
-	file := File{Filename:"", uid:uniqueId}
 
 	// Get the image from POST data
-	f, _, err := r.FormFile("image")
+	f, header, err := r.FormFile("image")
+
+	file := File{Filename:"", uid:uniqueId+"-"+header.Filename}
+
 	if err != nil {
 		log.Fatal("Image Missing ", err)
 		return
@@ -35,7 +39,16 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer tf.Close()
 	
-	err = UploadToS3(tf, file.uid)
+ 	// Copy Image -> Temp File
+ 	_, err = io.Copy(tf, f)
+ 	if err != nil {
+ 		log.Fatal("No copy", err)
+ 		return
+ 	}
+
+ 	real, err := os.Open("uploads/"+file.uid)
+
+	err = UploadToS3(real, file.uid)
 	if err != nil {
 		log.Fatal("Cannot add to S3 ", err)
 	}
@@ -45,15 +58,19 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 
 func ImageView(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	path := "uploads/"+vars["uid"]
-	if _, err := os.Stat(path); err == nil {
-		f := File{Filename: "/image/"+vars["uid"]}
-		getView(w, "view", f)
-	}
+	f := File{Filename: "https://s3-eu-west-1.amazonaws.com/imagio/"+vars["uid"]}
+	getView(w, "view", f)
 }
 
-func Image(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	w.Header().Set("Content-Type", "image")
-	http.ServeFile(w, r, "uploads/"+vars["uid"])
-}
+// func Image(w http.ResponseWriter, r *http.Request) {
+// 	vars := mux.Vars(r)
+// 	w.Header().Set("Content-Type", "image")
+
+// 	data, err := GetFromS3(vars["uid"])
+// 	if err != nil {
+// 		log.Fatal("Cannot get from S3 ", err)
+// 	}
+
+// 	fmt.Fprintf(w, string(data))
+	// http.ServeFile(w, r, "uploads/"+vars["uid"])
+// }	

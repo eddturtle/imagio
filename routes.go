@@ -32,10 +32,4 @@ var routes = Routes{
 		"/i/{uid}",
 		ImageView,
 	},
-	Route{
-		"Image",
-		"GET",
-		"/image/{uid}",
-		Image,
-	},
 }
