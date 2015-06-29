@@ -23,6 +23,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func imageUpload(w http.ResponseWriter, r *http.Request) {
 
+	// r.ParseForm()
+
 	// Get the image from POST data
 	f, header, err := r.FormFile("image")
 	if err != nil {
@@ -30,6 +32,13 @@ func imageUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer f.Close()
+
+	token := r.FormValue("token")
+	isValid := IsValidToken(token, r)
+	if !isValid {
+		http.Error(w, "Invalid Token", 500)
+		return
+	}
 
 	// Calculate a Filename
 	// (currently: based on original name and unix time)
@@ -39,7 +48,8 @@ func imageUpload(w http.ResponseWriter, r *http.Request) {
 		uid:      uniqueId,
 	}
 
-	err = UploadToS3(f, file.Filename)
+	// err = UploadToS3(f, file.Filename)
+	err = nil
 	if err != nil {
 		log.Fatal("Cannot add to S3 ", err)
 	}
@@ -48,6 +58,8 @@ func imageUpload(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal("Cannot encode to JSON ", err)
 	}
+
+ 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "%s", json)
 }
 
