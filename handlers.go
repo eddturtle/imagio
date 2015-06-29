@@ -16,12 +16,12 @@ const (
 	S3URL = "https://s3-eu-west-1.amazonaws.com/"
 )
 
-func Index(w http.ResponseWriter, r *http.Request) {
+func index(w http.ResponseWriter, r *http.Request) {
 	t := GetToken(w, r)
 	getView(w, "index", t)
 }
 
-func ImageUpload(w http.ResponseWriter, r *http.Request) {
+func imageUpload(w http.ResponseWriter, r *http.Request) {
 
 	// Get the image from POST data
 	f, header, err := r.FormFile("image")
@@ -51,7 +51,7 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", json)
 }
 
-func ImageView(w http.ResponseWriter, r *http.Request) {
+func imageView(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	f := File{
 		Filename: S3URL + os.Getenv("S3_BUCKET") + "/" + vars["uid"],

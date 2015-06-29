@@ -18,18 +18,18 @@ var routes = Routes{
 		"index",
 		"GET",
 		"/",
-		Index,
+		index,
 	},
 	Route{
-		"ImageUpload",
+		"imageUpload",
 		"POST",
 		"/i",
-		ImageUpload,
+		imageUpload,
 	},
 	Route{
-		"ImageView",
+		"imageView",
 		"GET",
 		"/i/{uid}",
-		ImageView,
+		imageView,
 	},
 }
