@@ -1,12 +1,12 @@
 package main
 
 import (
-	"os"
+	"bytes"
 	"io"
 	"log"
-	"bytes"
-	"net/http"
 	"mime/multipart"
+	"net/http"
+	"os"
 
 	"github.com/mitchellh/goamz/aws"
 	"github.com/mitchellh/goamz/s3"
@@ -32,9 +32,9 @@ func UploadToS3(file multipart.File, s3Key string) (err error) {
 
 	filetype := http.DetectContentType(buffer.Bytes())
 	err = bucket.Put(
-		s3Key, 
-		buffer.Bytes(), 
-		filetype, 
+		s3Key,
+		buffer.Bytes(),
+		filetype,
 		s3.ACL("public-read"),
 	)
 	return err

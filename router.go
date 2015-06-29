@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-    "github.com/gorilla/mux"
+	"github.com/gorilla/mux"
 )
 
 const (
@@ -26,9 +26,9 @@ func NewRouter() *mux.Router {
 	}
 
 	// Server CSS, JS & Images Statically.
-    router.
-    	PathPrefix(StaticDIR).
-    	Handler(http.StripPrefix(StaticDIR, http.FileServer(http.Dir("."+StaticDIR))))
+	router.
+		PathPrefix(StaticDIR).
+		Handler(http.StripPrefix(StaticDIR, http.FileServer(http.Dir("."+StaticDIR))))
 
 	return router
 }

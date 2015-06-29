@@ -5,7 +5,7 @@ import (
 )
 
 type File struct {
-	Filename 	string
-	uid			string
-	UploadTime 	time.Time
+	Filename   string
+	uid        string
+	UploadTime time.Time
 }

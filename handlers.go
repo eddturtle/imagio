@@ -1,15 +1,15 @@
 package main
 
 import (
-    "os"
-    "log"
-    "fmt"
-    "time"
-    "strconv"
-	"net/http"
 	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"strconv"
+	"time"
 
-    "github.com/gorilla/mux"
+	"github.com/gorilla/mux"
 )
 
 const (
@@ -31,12 +31,12 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer f.Close()
 
-	// Calculate a Filename 
+	// Calculate a Filename
 	// (currently: based on original name and unix time)
 	uniqueId := strconv.FormatInt(time.Now().Unix(), 10)
 	file := File{
-		Filename: uniqueId+"-"+header.Filename, 
-		uid: uniqueId,
+		Filename: uniqueId + "-" + header.Filename,
+		uid:      uniqueId,
 	}
 
 	err = UploadToS3(f, file.Filename)
