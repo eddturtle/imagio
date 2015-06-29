@@ -2,9 +2,9 @@
 	{{template "header"}}
 
 		<form action="/i" method="POST" enctype="multipart/form-data" class="upload-area dropzone" id="my-dropzone">
-
+			<input type="hidden" name="token" value="{{.Value}}" />
+			
 			<div class="fallback">
-				<input type="text" name="token" value="{{.Value}}" />
 				<input type="file" name="image" />
 				<br />
 				<input type="submit" value="Upload" />

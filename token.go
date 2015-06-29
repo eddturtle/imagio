@@ -1,9 +1,9 @@
 package main
 
 import (
+	"math/rand"
 	"net/http"
 	"time"
-    "math/rand"
 
 	"github.com/gorilla/sessions"
 )
@@ -22,11 +22,11 @@ type Token struct {
 
 func GenerateToken() string {
 	rand.Seed(time.Now().Unix())
-    b := make([]rune, 32)
-    for i := range b {
-        b[i] = letters[rand.Intn(len(letters))]
-    }
-    return string(b)
+	b := make([]rune, 32)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
 
 func GetToken(w http.ResponseWriter, r *http.Request) (t Token) {
@@ -38,10 +38,10 @@ func GetToken(w http.ResponseWriter, r *http.Request) (t Token) {
 	return t
 }
 
-func IsValidToken(value string, r* http.Request) (result bool) {
-    session, _ := store.Get(r, SessionName)
-    if session.Values["csrf"] == value {
-    	return true
-    }
-    return false
+func IsValidToken(value string, r *http.Request) (result bool) {
+	session, _ := store.Get(r, SessionName)
+	if session.Values["csrf"] == value {
+		return true
+	}
+	return false
 }
