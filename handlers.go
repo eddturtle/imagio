@@ -17,7 +17,8 @@ const (
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	getView(w, "index", nil)
+	t := GetToken(w, r)
+	getView(w, "index", t)
 }
 
 func ImageUpload(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +26,7 @@ func ImageUpload(w http.ResponseWriter, r *http.Request) {
 	// Get the image from POST data
 	f, header, err := r.FormFile("image")
 	if err != nil {
-		log.Printf("No Image, %s", err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	defer f.Close()

@@ -1,6 +1,8 @@
 {{define "index"}}
 	{{template "header"}}
 
+		<span>{{.Value}}</span>
+
 		<form action="/i" method="POST" enctype="multipart/form-data" class="upload-area dropzone" id="my-dropzone">
 
 			<div class="fallback">
