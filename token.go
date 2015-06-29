@@ -10,35 +10,38 @@ import (
 
 const (
 	SessionName = "imagio-tokens"
+	TokenLength = 32
 )
 
-var store = sessions.NewCookieStore([]byte("something-very-secret"))
-var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+var (
+	store   = sessions.NewCookieStore([]byte("something-very-secret"))
+	letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+)
 
 type Token struct {
 	Value   string
 	Created time.Time
 }
 
-func GenerateToken() string {
+func generateToken() string {
 	rand.Seed(time.Now().Unix())
-	b := make([]rune, 32)
+	b := make([]rune, TokenLength)
 	for i := range b {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
 }
 
-func GetToken(w http.ResponseWriter, r *http.Request) (t Token) {
+func getToken(w http.ResponseWriter, r *http.Request) (t Token) {
 	session, _ := store.Get(r, SessionName)
-	t = Token{Value: ""}
-	t.Value = GenerateToken()
+	t = Token{}
+	t.Value = generateToken()
 	session.Values["csrf"] = t.Value
 	session.Save(r, w)
 	return t
 }
 
-func IsValidToken(value string, r *http.Request) (result bool) {
+func isValidToken(value string, r *http.Request) (result bool) {
 	session, _ := store.Get(r, SessionName)
 	if session.Values["csrf"] == value {
 		return true

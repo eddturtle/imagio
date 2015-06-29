@@ -17,7 +17,7 @@ const (
 )
 
 func index(w http.ResponseWriter, r *http.Request) {
-	t := GetToken(w, r)
+	t := getToken(w, r)
 	getView(w, "index", t)
 }
 
@@ -31,8 +31,9 @@ func imageUpload(w http.ResponseWriter, r *http.Request) {
 	}
 	defer f.Close()
 
+	// CSRF Protection: send token with each request
 	token := r.FormValue("token")
-	isValid := IsValidToken(token, r)
+	isValid := isValidToken(token, r)
 	if !isValid {
 		http.Error(w, "Invalid Token", 500)
 		return
@@ -52,11 +53,11 @@ func imageUpload(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Cannot add to S3 ", err)
 	}
 
+	// JSON encode the filename and print
 	json, err := json.Marshal(file)
 	if err != nil {
 		log.Fatal("Cannot encode to JSON ", err)
 	}
-
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, "%s", json)
 }

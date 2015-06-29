@@ -13,9 +13,16 @@
 		Dropzone.options.myDropzone = {
 			paramName: "image",
 			acceptedFiles: "image/*",
+			init: function() {
+				this.on("addedfile", function(file) {
+					var el = document.querySelectorAll(".dz-default"); 
+					for (var i=0; i<el.length; i++) {
+						el[i].innerHTML = 'Uploading...';
+					}
+				});
+			},
 			success: function(file, success) {
-				var obj = JSON.parse(success);
-				window.location = "/i/"+obj.Filename;
+				window.location = "/i/"+success.Filename;
 			}
 		};
 	</script>
