@@ -7,7 +7,7 @@ import (
 
 func main() {
 	router := NewRouter()
-	err := http.ListenAndServe(":8080", router)
+	err := http.ListenAndServe(":" + os.Getenv("PORT"), router)
 	if err != nil {
 		log.Fatal("ListenAndServe Error: ", err)
 	}
