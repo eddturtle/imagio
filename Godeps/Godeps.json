@@ -1,0 +1,34 @@
+{
+	"ImportPath": "github.com/eddturtle/imagio",
+	"GoVersion": "go1.2.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "215affda49addc4c8ef7e2534915df2c8c35c6cd"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "47e8f450ef38c857cdd922ec08862ca9d65a1c6d"
+		},
+		{
+			"ImportPath": "github.com/gorilla/securecookie",
+			"Rev": "68004d2ba3cbc80d3a9949ea431b5c9f22ee8707"
+		},
+		{
+			"ImportPath": "github.com/gorilla/sessions",
+			"Rev": "f61c3ec2cf65d69e7efedfd4d060fe128882c951"
+		},
+		{
+			"ImportPath": "github.com/mitchellh/goamz/aws",
+			"Rev": "caaaea8b30ee15616494ee68abd5d8ebbbef05cf"
+		},
+		{
+			"ImportPath": "github.com/mitchellh/goamz/s3",
+			"Rev": "caaaea8b30ee15616494ee68abd5d8ebbbef05cf"
+		},
+		{
+			"ImportPath": "github.com/vaughan0/go-ini",
+			"Rev": "a98ad7ee00ec53921f08832bc06ecf7fd600e6a1"
+		}
+	]
+}
