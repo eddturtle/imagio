@@ -48,7 +48,6 @@ func imageUpload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = UploadToS3(f, file.Filename)
-	err = nil
 	if err != nil {
 		log.Fatal("Cannot add to S3 ", err)
 	}

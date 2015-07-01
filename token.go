@@ -19,11 +19,11 @@ var (
 )
 
 type Token struct {
-	Value   string
-	Created time.Time
+	Value string
 }
 
 func generateToken() string {
+	// Seed other-wise you get the same token on 1st launch
 	rand.Seed(time.Now().Unix())
 	b := make([]rune, TokenLength)
 	for i := range b {
@@ -34,17 +34,13 @@ func generateToken() string {
 
 func getToken(w http.ResponseWriter, r *http.Request) (t Token) {
 	session, _ := store.Get(r, SessionName)
-	t = Token{}
-	t.Value = generateToken()
+	t = Token{Value: generateToken()}
 	session.Values["csrf"] = t.Value
 	session.Save(r, w)
 	return t
 }
 
-func isValidToken(value string, r *http.Request) (result bool) {
+func isValidToken(value string, r *http.Request) bool {
 	session, _ := store.Get(r, SessionName)
-	if session.Values["csrf"] == value {
-		return true
-	}
-	return false
+	return session.Values["csrf"] == value
 }
